@@ -21,7 +21,7 @@ const App = () => {
   });
 
   return (
-    <GoogleOAuthProvider clientId="<Your Google Client ID>">
+    <GoogleOAuthProvider clientId="366999094984-7hof4rq81g82r0ahn68flnu5odgh85di.apps.googleusercontent.com">
       <button onClick={() => login()}>Login with Google</button>
     </GoogleOAuthProvider>
   );
