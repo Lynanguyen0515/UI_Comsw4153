@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Team Task Management App</title>
-  <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS for styling -->
+  <link rel="stylesheet" href="ui.css"> <!-- Link to external CSS for styling -->
 </head>
 <body>
   <!-- Login Page -->
@@ -17,6 +17,19 @@
       <input type="password" id="password" required>
       <button type="submit">Login</button>
       <p>Don't have an account? <a href="#" onclick="showSignUp()">Sign Up</a></p>
+    </form>
+  </div>
+
+  <!-- Sign-Up Page -->
+  <div id="signup-page" class="page hidden">
+    <h2>Sign Up</h2>
+    <form id="signup-form">
+      <label for="new-username">Username:</label>
+      <input type="text" id="new-username" required>
+      <label for="new-password">Password:</label>
+      <input type="password" id="new-password" required>
+      <button type="submit">Sign Up</button>
+      <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
     </form>
   </div>
 
@@ -33,11 +46,17 @@
       <h3>Overview</h3>
       <div id="task-summary">
         <h4>Tasks</h4>
-        <!-- List of tasks will be dynamically populated here -->
+        <button onclick="showTaskForm()">Add New Task</button>
+        <div id="task-list">
+          <!-- List of tasks will be dynamically populated here -->
+        </div>
       </div>
       <div id="reminders-summary">
         <h4>Reminders</h4>
-        <!-- List of reminders will be dynamically populated here -->
+        <button onclick="showReminderForm()">Set New Reminder</button>
+        <div id="reminder-list">
+          <!-- List of reminders will be dynamically populated here -->
+        </div>
       </div>
     </section>
   </div>
@@ -51,7 +70,7 @@
     </div>
     <div id="task-form" class="hidden">
       <h3>Create New Task</h3>
-      <form>
+      <form id="new-task-form">
         <label for="task-title">Title:</label>
         <input type="text" id="task-title" required>
         <label for="task-desc">Description:</label>
