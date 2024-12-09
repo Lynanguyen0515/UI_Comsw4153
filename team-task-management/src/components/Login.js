@@ -1,41 +1,30 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 
-const Login = ({ setToken }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await axios.post('/api/login', { username, password });
-      setToken(response.data.token);
-    } catch (error) {
-      alert('Invalid username or password');
-    }
-  };
-
-  const handleSignUp = () => {
-    navigate('/signup');
-  };
+const App = () => {
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      // Send token to the backend for verification
+      fetch('/api/auth/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: tokenResponse.credential }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          localStorage.setItem('authToken', data.authToken); // Store your JWT
+        })
+        .catch(console.error);
+    },
+  });
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
-        <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-        <label htmlFor="password">Password:</label>
-        <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <div>
-          <button type="submit">Login</button>
-          <button type="button" onClick={handleSignUp}>Sign Up</button>
-        </div>
-      </form>
-    </div>
+    <GoogleOAuthProvider clientId="<Your Google Client ID>">
+      <button onClick={() => login()}>Login with Google</button>
+    </GoogleOAuthProvider>
   );
 };
 
-export default Login;
+export default App;
