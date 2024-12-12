@@ -14,7 +14,7 @@ function App() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    Axios.get(`${BACKEND_URL}/api/auth/google`)
+    Axios.get(`${BACKEND_URL}/auth/google`)
       .then((res) => {
         window.location.assign(res.data.auth_url);
       })
