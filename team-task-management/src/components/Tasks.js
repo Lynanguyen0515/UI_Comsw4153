@@ -1,8 +1,33 @@
-import React, { useState } from 'react';
-import TaskForm from './TaskForm';
+import React, { useState, useEffect } from "react";
+import TaskForm from "./TaskForm";
+import { useNavigate } from "react-router-dom";
+import Axios from "axios";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Tasks = () => {
+  const nav = useNavigate();
   const [tasks, setTasks] = useState([]);
+  useEffect(() => {
+    if (localStorage.getItem("auth_token") === null) {
+      return nav("/login");
+    }
+
+    const token = localStorage.getItem("auth_token");
+    console.log(token);
+    Axios.get(`${BACKEND_URL}/tasks`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response.data);
+        setTasks(response.data.items);
+      })
+      .catch((error) => {
+        console.error("Error fetching tasks:", error);
+      });
+  }, [nav]);
 
   const addTask = (task) => {
     setTasks([...tasks, task]);

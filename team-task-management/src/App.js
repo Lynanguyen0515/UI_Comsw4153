@@ -4,8 +4,11 @@ import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Tasks from "./components/Tasks";
+import Reminders from "./components/Reminders";
+import Profile from "./components/Profile";
 
-export const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function App() {
   const nav = useNavigate();
@@ -72,6 +75,30 @@ function App() {
         element={
           <ProtectedRoute token={token}>
             <Dashboard username={username} logout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/tasks"
+        element={
+          <ProtectedRoute token={token}>
+            <Tasks />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/reminders"
+        element={
+          <ProtectedRoute token={token}>
+            <Reminders />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute token={token}>
+            <Profile />
           </ProtectedRoute>
         }
       />
