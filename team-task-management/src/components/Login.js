@@ -1,25 +1,48 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { GoogleLogin } from '@react-oauth/google';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { generateJwt } from "../api"; // Import the function from api.js
 
-function Login(props) {
+function Login() {
   const nav = useNavigate();
 
+  // Check if user is already authenticated
   useEffect(() => {
     if (localStorage.getItem("auth_token") !== null) {
-      return nav("/home");
+      nav("/home");  // Redirect to home if already logged in
     }
-  }, []);
+  }, [nav]);
+
+  // Handle Google login response
+  const handleGoogleLogin = async (response) => {
+    console.log("Google Login Response:", response);  // Log the response
+    const googleToken = response.credential;
+
+    try {
+      const data = await generateJwt(googleToken);
+      console.log("JWT Response Data:", data);  // Log the response from generateJwt function
+
+      if (data.jwt) {
+        localStorage.setItem("auth_token", data.jwt);
+        nav("/home");  // Redirect to home
+      } else {
+      alert("Error logging in. Please try again.");
+      }
+    } catch (error) {
+      console.error("Login Failed:", error);  // Log the error
+      alert("An error occurred while logging in. Please try again.");
+    }
+  };
+
+
   return (
-    <div style={{ padding: "10px", border: "2px solid black", margin: "20px" }}>
-      <h1>Hello</h1>
-      <button onClick={(e) => props.login(e)} className="login">
-        <img
-          style={{ width: "50px", height: "50px", paddingTop: "10px" }}
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
-          alt="Google Logo"
-        />
-        Log in With Google
-      </button>
+    <div>
+      <h1>Login</h1>
+      <GoogleLogin
+        onSuccess={handleGoogleLogin}
+        onError={() => console.log("Login Failed")}
+        clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} // Make sure this is set
+      />
     </div>
   );
 }
